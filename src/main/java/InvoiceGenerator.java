@@ -6,16 +6,14 @@ public class InvoiceGenerator {
 
     public double calculateFare(double distance, int time) {
         totalFare = COST_PER_KM * distance + COST_PER_MINUTE * time;
-        if(totalFare < MIN_FARE)
-            totalFare = MIN_FARE;
-        return totalFare;
+        return Math.max(totalFare, MIN_FARE);
     }
 
-    public double calculateFareForMultipleRides(Ride[] rides) {
-        double aggregateTotalFare = 0;
-        for (Ride ride: rides) {
-            aggregateTotalFare += this.calculateFare(ride.distance, ride.time);
+    public InvoiceSummary calculateFare(Ride[] rides) {
+        double totalFare = 0;
+        for (Ride ride : rides) {
+            totalFare += this.calculateFare(ride.distance, ride.time);
         }
-        return aggregateTotalFare;
+        return new InvoiceSummary(rides.length, totalFare);
     }
 }
